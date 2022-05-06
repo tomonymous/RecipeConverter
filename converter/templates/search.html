@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    {% load static %}
+    <div>
+        <input type="hidden" id="ingredient_names" name="variable" value="{{ ingredient_names }}">
+        <input type="hidden" id="ingredient_units" name="variable" value="{{ ingredient_units }}">
+        <input type="hidden" id="ingredient_values" name="variable" value="{{ ingredient_values }}">
+        <input type="hidden" id="ingredient_descriptions" name="variable" value="{{ ingredient_descriptions }}">
+    </div>
+
+    <html lang="en">
+        <div>
+            <select name="ingredients" id="ingredients" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
+            <input name="scale" id="scale" size="4" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983; text-align: right"></input>
+            <span name="scaleUnit" id="scaleUnit" ></span>
+            <Button onclick="onScaleQuantities()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Scale </Button>
+            <Button onclick="onResetQuantities()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Reset </Button>
+        </div>
+        <div>
+            <select name="convertFrom" id="convertFrom" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
+            <select name="convertTo" id="convertTo" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
+            <Button onclick="onConvert()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Convert All</Button>
+            <Button onclick="onConvertSelectedRows()" id="convertSelectedButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Convert Selected</Button>
+        </div>
+        <div>
+            <Button onclick="onAddRow()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Add Row </Button>
+            <Button onclick="onDeleteRows()" id="deleteButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Delete </Button>
+        </div>
+        <head>
+            <title>Ag-Grid Basic Example</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <style media="only screen">
+                html, body {
+                    height: 100%;
+                    width: 100%;
+                    margin: 0;
+                    box-sizing: border-box;
+                    -webkit-overflow-scrolling: touch;
+                }
+
+                html {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    padding: 0;
+                    overflow: auto;
+                }
+
+                body {
+                    padding: 1rem;
+                    overflow: auto;
+                }
+            </style>
+            <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
+            <script  src="{% static 'js/quantities.js' %}"></script>
+            <script type=module src="{% static 'js/main.js' %}"></script>
+            <script type="module">
+                import { onScaleQuantities } from "{% static 'js/main.js' %}";
+                window.onScaleQuantities = onScaleQuantities;
+            </script>
+            <script type="module">
+                import { onResetQuantities } from "{% static 'js/main.js' %}";
+                window.onResetQuantities = onResetQuantities;
+            </script>
+            <script type="module">
+                import { onAddRow } from "{% static 'js/main.js' %}";
+                window.onAddRow = onAddRow;
+            </script>
+            <script type="module">
+                import { onDeleteRows } from "{% static 'js/main.js' %}";
+                window.onDeleteRows = onDeleteRows;
+            </script>
+            <script type="module">
+                import { onConvert } from "{% static 'js/main.js' %}";
+                window.onConvert = onConvert;
+            </script>
+            <script type="module">
+                import { onConvertSelectedRows } from "{% static 'js/main.js' %}";
+                window.onConvertSelectedRows = onConvertSelectedRows;
+            </script>
+            <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+        </head>
+        <body>
+            <div id="myGrid" style="height: 100%;" class="ag-theme-alpine"></div>
+        </body>
+        <pre contenteditable>
+            {{ directions|linebreaks }}
+        </pre>
+    </html>
+
+{% endblock %}
