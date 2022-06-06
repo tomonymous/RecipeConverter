@@ -47,7 +47,7 @@ for (let i = 0; i < names.length; i++){
         }
     }
 
-    let entry = { ingredient: names[i], quantity: values[i], unscaled: values[i], scale: 1, units: units[i], details: descriptions[i]};
+    let entry = { ingredient: unicodeToChar(names[i]), quantity: values[i], unscaled: values[i], scale: 1, units: units[i], details: descriptions[i]};
     rowData.push(entry);
 }
 
@@ -430,81 +430,15 @@ function compareOptions(a, b) {                             //use in sort() to c
     return comparison;
 }
 
-/*
-export function onConvert() {
-    if(convert_to == convert_from){
-        return;
-    }
-    if(convert_to.value == 'metric'){
-        gridOptions.api.forEachNode((rowNode, index) => {
-            if(rowNode.data.units == 'oz' || rowNode.data.units == 'lbs' || rowNode.data.units == 'dram'){
-                let qty = Qty.parse(rowNode.data.quantity + ' ' + rowNode.data.units);
-                qty = qty.to('g').toPrec('1 g');
-                if(qty != null){
-                    rowNode.setDataValue('quantity', qty.toString().split(' ')[0]);
-                    rowNode.setDataValue('units', qty.toString().split(' ')[1]);
-                    rowNode.setDataValue('unscaled', qty.toString().split(' ')[0] / rowNode.data.scale);
-                }
+function unicodeToChar(text) {
+   return text.replace(/\\u[\dA-F]{4}/gi,
+          function (match) {
+            let code = parseInt(match.replace(/\\u/g, ''), 16);
+            if (code >= 9632 && code <= 9727){                          //if character is geometric shape (incl checkboxes)
+                return '';
             }
-            if(rowNode.data.units == 'qt' || rowNode.data.units == 'pt' || rowNode.data.units == 'gal' || rowNode.data.units == 'floz'){
-                let qty;
-                if(convert_from.value == 'imperial'){
-                    qty = Qty.parse(rowNode.data.quantity + ' ' + rowNode.data.units + 'imp');
-                }
-                else{
-                    qty = Qty.parse(rowNode.data.quantity + ' ' + rowNode.data.units);
-                }
-                qty = qty.to('mL').toPrec('1 ml');
-                if(qty != null){
-                    rowNode.setDataValue('quantity', qty.toString().split(' ')[0]);
-                    rowNode.setDataValue('units', qty.toString().split(' ')[1]);
-                    rowNode.setDataValue('unscaled', qty.toString().split(' ')[0] / rowNode.data.scale);
-                }
+            else {
+                return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
             }
-        })
-    }
-    else{
-        gridOptions.api.forEachNode((rowNode, index) => {
-            if(rowNode.data.units == 'g' || rowNode.data.units == 'kg'){
-                let qty = Qty.parse(rowNode.data.quantity + ' ' + rowNode.data.units);
-                qty = qty.to('oz').toPrec('1 oz');
-                if(qty != null){
-                    rowNode.setDataValue('quantity', qty.toString().split(' ')[0]);
-                    rowNode.setDataValue('units', qty.toString().split(' ')[1]);
-                    rowNode.setDataValue('unscaled', qty.toString().split(' ')[0] / rowNode.data.scale);
-                }
-            }
-            else if(rowNode.data.units == 'L' || rowNode.data.units == 'mL'){
-                let qty = Qty.parse(rowNode.data.quantity + ' ' + rowNode.data.units);
-                if(convert_to.value == 'imperial'){
-                    qty = qty.to('ptimp').toPrec('1 ptimp');
-                }
-                else{
-                    qty = qty.to('pt').toPrec('1 pt');
-                }
-                if(qty != null){
-                    rowNode.setDataValue('quantity', qty.toString().split(' ')[0]);
-                    rowNode.setDataValue('units', qty.toString().split(' ')[1].substring(0,2));
-                    rowNode.setDataValue('unscaled', qty.toString().split(' ')[0] / rowNode.data.scale);
-                }
-            }
-            else if(rowNode.data.units == 'gal' || rowNode.data.units == 'qt' || rowNode.data.units == 'pt' || rowNode.data.units == 'floz'){
-                let qty;
-                if(convert_to.value == 'imperial'){
-                    qty = Qty.parse(rowNode.data.quantity + ' ' + rowNode.data.units);
-                    qty = qty.to('ptimp').toPrec('1 ptimp');
-                }
-                else{
-                    qty = Qty.parse(rowNode.data.quantity + ' ' + rowNode.data.units + 'imp');
-                    qty = qty.to('pt').toPrec('1 pt');
-                }
-                if(qty != null){
-                    rowNode.setDataValue('quantity', qty.toString().split(' ')[0]);
-                    rowNode.setDataValue('units', qty.toString().split(' ')[1].substring(0,2));
-                    rowNode.setDataValue('unscaled', qty.toString().split(' ')[0] / rowNode.data.scale);
-                }
-            }
-        })
-    }
+          });
 }
-*/

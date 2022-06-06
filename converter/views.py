@@ -32,10 +32,12 @@ def index(request):
 
 def search(request):
     #url = 'https://www.allrecipes.com/recipe/273786/spicy-korean-fried-chicken-with-gochujang-sauce/'
-    url = 'https://www.bonappetit.com/recipe/perfect-pizza'
+    #url = 'https://www.bonappetit.com/recipe/perfect-pizza'
+    #url = 'https://www.seriouseats.com/crispy-braised-chicken-white-beans-chile-verde-hatch-food-lab-recipe'
     #url = 'https://www.jamieoliver.com/recipes/chicken-recipes/thai-green-chicken-curry/'
     #url = 'https://www.joshuaweissman.com/post/easy-authentic-thai-green-curry'
     #url = 'https://www.bbc.co.uk/food/recipes/cumberland_sausage_59571'
+    #url = 'https://food52.com/recipes/61557-classic-nigerian-jollof-rice'
 
     link = request.GET.get('link')
     query = request.GET.get('query')
@@ -49,10 +51,16 @@ def search(request):
         directions_found = False
         for text in ingredient_list:
             line = re.sub('\s+', ' ', text).strip()
+            line = re.sub(' / ', '/', line)
             if not directions_found:
                 if re.sub('[^a-zA-Z\s]', '', line).lower() in instruction_terms:
                     directions_found = True
                     directions += line + '\n'
+                elif 'ingredient' in text[:14].lower():
+                    if checkListForIngredients(query):
+                        query += line + '\n'
+                    else:
+                        query = ''
                 else:
                     query += line + '\n'
             else:
@@ -83,7 +91,7 @@ def search(request):
     match = re.search('\d+\/+\d', query)                #converts written out fractions to decimals
     while match:
         decimal = eval(match.group())
-        query = query[:match.start()] + str(decimal) + query[match.end():]
+        query = query[:match.start()] + str(Decimal(decimal).quantize(Decimal("2.00"))) + query[match.end():]
         match = re.search('\d+\/+\d', query)
 
     match = re.search('\d 0.', query)                   #deals with any whole numbers in fractions
@@ -93,17 +101,18 @@ def search(request):
         match = re.search('\d 0.', query)
     query = re.sub(r'(?<=\d)(?=[^\d\s.])|(?<=[^\d\s.])(?=\d)', ' ', query)       #add space between numbers and units
     query = re.sub('’',r"'", query)                     #replace ’ with ' for more predictable TextBlob
-    query = re.sub('-', r" - ", query)                  #ensure space around hypens
+    query = re.sub('-|–', r" - ", query)                  #ensure space around hypens
+    query = re.sub('/|\\\\', r" or ", query)
     query = t2d.convert(query)                          #convert written numbers to digits
 
     query = re.sub(r'\.(?!\d)', '', query)              #remove non numeric periods
+    match = re.search('([0-9]+\.?[0-9]*|\.[0-9]+)\s+(to|-)\s+([0-9]+\.?[0-9]*|\.[0-9]+)', query)  # eg. converts 'two to three' to 2.5
 
-    match = re.search('\d(\s+|)(to|-)(\s+|)\d', query)  # eg. converts 'two to three' to 2.5
     while match:
-        numbers = re.findall('\d', match.group())
-        number = (int(numbers[0]) + int(numbers[1])) / 2
+        numbers = re.findall('[0-9]+\.?[0-9]*|\.[0-9]+', match.group())
+        number = (Decimal(numbers[0]) + Decimal(numbers[1])) / 2
         query = query[:match.start()] + str(number) + query[match.end():]
-        match = re.search('\d\s+(to|-)\s+\d', query)
+        match = re.search('([0-9]+\.?[0-9]*|\.[0-9]+)\s+(to|-)\s+([0-9]+\.?[0-9]*|\.[0-9]+)', query)
 
     match = re.search('\d(\s+|)(x|X)(\s+|)\d', query)  # eg. converts '2 x 400g' to 800g
     while match:
@@ -136,18 +145,19 @@ def search(request):
             except:
                 pass
 
-        if ',' in text:
-            try:
-                description = text[text.index(",")+1:] + " "
-                text = text[:text.index(",")]
-            except:
-                pass
+        #if ',' in text:
+        #    try:
+        #        description = text[text.index(",")+1:] + " "
+        #         text = text[:text.index(",")]
+        #    except:
+        #        pass
 
         if ' of ' in text:
-            try:
-                text = text[text.index(" of ")+4:] + " " + text[:text.index(" of ")]
-            except:
-                pass
+            if ' of the ' not in text:
+                try:
+                    text = text[text.index(" of ")+4:] + " " + text[:text.index(" of ")]
+                except:
+                    pass
 
         blob = TextBlob(text.strip())
         blob.tags
@@ -183,6 +193,14 @@ def search(request):
                 tag = 'NN'
             if last_word == 'ground' and tag == 'JJ':
                 tag = 'NN'
+            if word == 'quality':
+                tag = 'VBD'
+            if word == 'medium':
+                tag = 'JJ'
+            if word == 'sized':
+                tag = 'JJ'
+            if word == 'virgin':
+                tag = 'JJ'
             if len(word) == 1 and unicodedata.name(word).split()[0] == 'VULGAR':
                 word = unicodedata.numeric(word)
                 ingredient.quantity = round(Decimal(word), 2)
@@ -194,23 +212,30 @@ def search(request):
                     last_designation = 'quantity'
                     quantity_found = True
                 else:
-                    ingredient.description == (ingredient.description + ' ' + word).strip()
+                    ingredient.description = (ingredient.description + ' ' + word).strip()
                     last_designation = 'description'
-            elif word in measures and not unit_found:
-                ingredient.units = word
-                if word == 'floz':
-                    ingredient.units = 'fl oz'
-                last_designation = 'unit'
-                unit_found = True
+            elif word in measures:
+                if not unit_found:
+                    ingredient.units = word
+                    if word == 'floz':
+                        ingredient.units = 'fl oz'
+                    last_designation = 'unit'
+                    unit_found = True
+                else:
+                    ingredient.description += word + ' '
+                    last_designation = 'description'
             elif not name_found:
-                if tag == 'NN' or tag == 'NNS' or tag == 'NNPS' or tag == 'NNP':
+                if word == 'or':
+                    ingredient.description += word + ' '
+                    last_designation = 'description'
+                elif tag == 'NN' or tag == 'NNS' or tag == 'NNPS' or tag == 'NNP':
                     ingredient.name = (adjectives + ' ' + word).strip()
                     adjectives = ''
                     last_designation = 'name'
                     name_found = True
                     parsing_name = True
                 elif tag == 'VBD' and not unit_found:
-                    description += word + ' '
+                    ingredient.description += word + ' '
                     last_designation = 'description'
                 else:
                     if tag != "IN" and tag != "DT":
@@ -230,17 +255,16 @@ def search(request):
                         last_designation = 'name'
                     else:
                         parsing_name = False
-                        description += word + " "
+                        ingredient.description += word + " "
                         last_designation = 'description'
                 else:
-                    description += word + " "
+                    ingredient.description += word + " "
                     last_designation = 'description'
             last_word = word
         ingredient.description = (ingredient.description + ' ' + description).strip()
-        last_designation = 'description'
         if ingredient.name != '':
-            if ingredient.units == '' and ingredient.quantity is None and ingredient.description == '':     #if only name attribute found and not
-                if 'salt' not in ingredient.name and 'pepper' not in ingredient.name:                       #salt or pepper then mark as subtitle.
+            if ingredient.units == '' and ingredient.quantity is None and ingredient.description == '':                                      #if only name attribute found and not
+                if 'salt' not in ingredient.name and 'pepper' not in ingredient.name and 'oil' not in ingredient.name:                       #salt or pepper then mark as subtitle.
                     ingredient.name = '#' + ingredient.name.strip()
             ingredient.name = ingredient.name.strip().title()
             ingredients.append(ingredient)
@@ -248,14 +272,14 @@ def search(request):
             ingredient.name = ingredient.description.strip().title()
             ingredient.description = ''
             if ingredient.units == '' and ingredient.quantity is None:
-                if 'salt' not in ingredient.name and 'pepper' not in ingredient.name:
+                if 'salt' not in ingredient.name and 'pepper' not in ingredient.name and 'oil' not in ingredient.name:
                     ingredient.name = '#' + ingredient.name.strip()
             ingredients.append(ingredient)
         elif adjectives != '':
             ingredient.name = adjectives.strip().title()
             adjectives = ''
             if ingredient.units == '' and ingredient.quantity is None and ingredient.description == '':
-                if 'salt' not in ingredient.name and 'pepper' not in ingredient.name:
+                if 'salt' not in ingredient.name and 'pepper' not in ingredient.name and 'oil' not in ingredient.name:
                     ingredient.name = '#' + ingredient.name.strip()
             ingredients.append(ingredient)
         else:
@@ -339,6 +363,7 @@ def findIngredientList(type, count, html):
             not_found = True
         previous_parent = None
         last_list_item = None
+        included_nodes = []
         for t in text:
             if len(t.strip()) > 0:
                 for parent in t.parents:
@@ -349,13 +374,19 @@ def findIngredientList(type, count, html):
                                 current_list_item = list_parent
                                 break
                         line = re.sub('\s+', ' ', t).strip()
-                        if len(item_list) > 0 and current_list_item != None and current_list_item == last_list_item and t.parent.previous_sibling != None and (previous_parent == t.parent or t.parent.name == 'span' or previous_parent in t.parent.children):
+                        if len(item_list) > 0 and current_list_item != None and current_list_item == last_list_item \
+                                and (t.parent in included_nodes or t.parent.previous_sibling != None) and (previous_parent == t.parent
+                                                                           or t.parent.name == 'span'
+                                                                           or t.parent.name == 'sub'
+                                                                           or t.parent.name == 'a'
+                                                                           or previous_parent in t.parent.children):
                             item_list[len(item_list)-1] = item_list[len(item_list)-1] + ' ' + line
-                            print(item_list[len(item_list)-1])
                             last_list_item = current_list_item
+                            included_nodes.append(t.parent)
                         else:
                             item_list.append(line)
                             last_list_item = current_list_item
+                            included_nodes.append(t.parent)
                         item_string += '\n' + line
                         previous_parent = t.parent
                         break
@@ -364,22 +395,9 @@ def findIngredientList(type, count, html):
             item_string = re.sub('-', r" - ", item_string)
             item_string = re.sub('/', r" / ", item_string)
             item_string_list = item_string.split()
-            number_count = 0
-            measure_count = 0
-            for word in item_string_list:
-                is_numeric = False
-                try:
-                    number = float(word)
-                    is_numeric = True
-                except ValueError:
-                    pass
-                if word in measures:
-                    measure_count += 1
-                elif is_numeric:
-                    number_count += 1
-                if number_count > 3 and measure_count > 1:
-                    found = True
-                    break
+            if checkListForIngredients(item_string_list):
+                found = True
+                break
         elif len(item_list) > 0:
             lengths = []
             for item in item_list:
@@ -429,3 +447,21 @@ def findItems(type, html):
             smallest_scope = option[0]
             list = option[1]
     return list
+
+def checkListForIngredients(item_string_list):
+    number_count = 0
+    measure_count = 0
+    for word in item_string_list:
+        is_numeric = False
+        try:
+            number = float(word)
+            is_numeric = True
+        except ValueError:
+            pass
+        if word in measures:
+            measure_count += 1
+        elif is_numeric:
+            number_count += 1
+        if number_count > 3 and measure_count > 1:
+            return True
+    return False
