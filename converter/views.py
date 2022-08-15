@@ -5,6 +5,7 @@ from text2digits import text2digits
 from django.shortcuts import render
 from .models import Ingredient
 import nltk
+nltk.download('punkt')
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 from bs4.element import Comment
