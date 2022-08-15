@@ -6,6 +6,7 @@ from django.shortcuts import render
 from .models import Ingredient
 import nltk
 nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 from bs4.element import Comment
