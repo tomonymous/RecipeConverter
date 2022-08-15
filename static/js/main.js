@@ -9,6 +9,8 @@ let convert_to = document.getElementById("convertTo");
 let scale_unit = document.getElementById("scaleUnit");
 let convert_selected_button = document.getElementById("convertSelectedButton");
 let delete_button = document.getElementById("deleteButton");
+let row_added_message = document.getElementById("rowAddedMessage");
+let new_row_count = 0;
 convert_from.onchange = onConvertFromSelected;
 scale_ingredient.onchange = onScaleIngredientSelected;
 var names = names_data.substring(2, names_data.length - 2).split("\"\, \"", );
@@ -85,6 +87,7 @@ const gridOptions = {
 
 
 export function onAddRow() {
+    new_row_count = 1;
     var api = gridOptions.api;
     let current_scale = 1;
     gridOptions.api.forEachNode((rowNode, index) => {
@@ -93,13 +96,55 @@ export function onAddRow() {
         }
     })
     api.applyTransaction({add: [{ ingredient: "Ingredient", quantity: 0, units: 'Unit', details: 'Extra Info', scale: current_scale, unscaled: 0}] });
+    row_added_message.innerHTML = "1 row added to the bottom of the table.";
+}
+
+export function onAddExtraRow() {
+    new_row_count += 1;
+    var api = gridOptions.api;
+    let current_scale = 1;
+    gridOptions.api.forEachNode((rowNode, index) => {
+        if(rowNode.data.scale != null){
+            current_scale = rowNode.data.scale;
+        }
+    })
+    api.applyTransaction({add: [{ ingredient: "Ingredient", quantity: 0, units: 'Unit', details: 'Extra Info', scale: current_scale, unscaled: 0}] });
+    row_added_message.innerHTML = new_row_count + " rows added to the bottom of the table.";
 }
 
 export function onDeleteRows() {
     var api = gridOptions.api;
     const selectedRows = api.getSelectedRows();
+    if(selectedRows.length < 1){
+        var heading_error_modal = new bootstrap.Modal(document.getElementById("headingErrorModal"), {});
+        heading_error_modal.show();
+    }
     api.applyTransaction({remove: selectedRows });
     onCellValueChanged('delete');
+}
+
+export function onToggleHeading() {
+    var selectedRows = gridOptions.api.getSelectedNodes();
+    if(selectedRows.length < 1){
+        var heading_error_modal = new bootstrap.Modal(document.getElementById("headingErrorModal"), {});
+        heading_error_modal.show();
+    }
+    else{
+        for(let i = 0; i < selectedRows.length; i++) {
+            var rowNode = selectedRows[i];
+            if(rowNode.data.ingredient.substring(0, 1) == "#"){
+                try{
+                    rowNode.setDataValue('ingredient', rowNode.data.ingredient.substring(1));
+                }
+                catch{
+                }
+            }
+            else{
+                rowNode.setDataValue('ingredient', "#" + rowNode.data.ingredient);
+            }
+            rowNode.setSelected(false);
+        }
+    }
 }
 
 export function onScaleQuantities() {
@@ -137,9 +182,11 @@ export function onScaleQuantities() {
 
 export function onResetQuantities() {
     gridOptions.api.forEachNode((rowNode, index) => {
-        rowNode.setDataValue('quantity', roundQuantity(rowNode.data.quantity/rowNode.data.scale));
-        rowNode.setDataValue('unscaled', roundQuantity(rowNode.data.quantity));
-        rowNode.setDataValue('scale', 1);
+        if (rowNode.data.quantity != "") {
+            rowNode.setDataValue('quantity', roundQuantity(rowNode.data.quantity/rowNode.data.scale));
+            rowNode.setDataValue('unscaled', roundQuantity(rowNode.data.quantity));
+            rowNode.setDataValue('scale', 1);
+        }
     })
 
 }

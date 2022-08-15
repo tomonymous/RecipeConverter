@@ -1,14 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form class="form-inline mx-0" action="search">
-        <!--<input class="form-control ml-1 mr-0 "style="height:30px; display:inline-block" type="search" placeholder="Paste Recipe" aria-label="Search" name="query">-->
-        <textarea class="form-control" type="search" placeholder="Paste Ingredients" aria-label="Search" name="query"></textarea>
-        <textarea class="form-control" type="search" placeholder="Paste Directions" aria-label="Search" name="directions"></textarea>
-        <button class="btn btn-outline-warning my-2 my-sm-1 mx-0 inline" style="height:27px; display:inline-block; padding:0px 5px"type="submit">Go</button>
+    <div class="py-3 text-center">
+        <title>Recipe Frog</title>
+        <h2 style="padding: 20px">Recipe Frog</h2>
+        <p class="lead">A quick and easy way to convert, edit and scale your recipes. Simply paste the link to your recipe below.</p>
+    </div>
+    <form class="form-inline mx-5" action="search">
+        <div class="form-floating mb-3">
+            <input class="form-control" type="search" id="recipeLink" placeholder="Paste Link" aria-label="Search" name="link"></input>
+            <label for="recipeLink">Recipe Link</label>
+        </div>
+        <div style="text-align:center">
+            <button class="btn btn-outline-success" style="display:inline-block; padding:0px 20px"type="submit">Go</button>
+        </div>
     </form>
-    <form class="form-inline mx-0" action="search">
-        <textarea class="form-control" type="search" placeholder="Paste Link" aria-label="Search" name="link"></textarea>
-        <button class="btn btn-outline-warning my-2 my-sm-1 mx-0 inline" style="height:27px; display:inline-block; padding:0px 5px"type="submit">Go</button>
-    </form>
+    <div class="py-3 text-center">
+        <p class="lead">Don't have a link? Enter the ingredients and directions below and hit Go.</p>
+        <form class="form-inline mx-5" action="search">
+            <div style="padding: 2px 0px">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" id="ingredients" type="search" placeholder="Paste Ingredients" aria-label="Search" name="query"></textarea>
+                    <label for="ingredients">Ingredients</label>
+                </div>
+            </div>
+            <div style="padding: 2px 0px">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" id="directions" type="search" placeholder="Paste Directions" aria-label="Search" name="directions"></textarea>
+                    <label for="directions">Directions</label>
+                </div>
+            </div>
+            <button class="btn btn-outline-success" style="display:inline-block; padding:0px 20px"type="submit">Go</button>
+        </form>
+    </div>
+
 {% endblock %}

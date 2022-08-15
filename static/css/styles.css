@@ -1,9 +1,17 @@
 .subheadings {
-  background-color: #64a983 !important;
+  background-color: #9fcdd9 !important;
 }
 
 #directions {
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
+}
+
+.nav-link {
+    color:#006e47;
+}
+
+.nav-link:focus, .nav-link:hover {
+    color: #1084a1;
 }

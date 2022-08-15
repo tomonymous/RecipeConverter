@@ -8,101 +8,198 @@
         <input type="hidden" id="ingredient_values" name="variable" value="{{ ingredient_values }}">
         <input type="hidden" id="ingredient_descriptions" name="variable" value="{{ ingredient_descriptions }}">
     </div>
+    <!-- Modals -->
+    <title>Recipe Frog</title>
+    <div class="modal fade" id="addRowModal" tabindex="-1" aria-labelledby="addRowModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" >Row Added</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="rowAddedMessage" >Row added to the bottom of the table.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" onclick="onAddExtraRow()" class="btn btn-primary">Add Another</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="headingErrorModal" tabindex="-1" aria-labelledby="headingErrorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title">No Rows Selected</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
-      <div class="py-5 text-center">
+      <div class="py-2 text-center">
         <h2>Recipe</h2>
-        <p class="lead">Description of controls. Hello.</p>
+        <p class="lead">
+            Use the controls to scale the recipe or convert between units of measurement. <br>
+            Switch to the 'Edit' tab to add or delete rows or toggle headings. <br>
+            View and edit the recipe directions in the 'Directions' tab.</p>
       </div>
 
       <div class="row">
-        <div class="d-flex gap-2 justify-content-center">
-            <select name="ingredients" id="ingredients" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
-            <input name="scale" id="scale" size="4" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983; text-align: right"></input>
-            <span name="scaleUnit" id="scaleUnit" ></span>
-            <Button onclick="onScaleQuantities()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Scale </Button>
-            <Button onclick="onResetQuantities()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Reset </Button>
-        </div>
-        <div class="d-flex gap-2 justify-content-center">
-            <select name="convertFrom" id="convertFrom" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
-            <select name="convertTo" id="convertTo" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
-            <Button onclick="onConvert()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Convert All</Button>
-            <Button onclick="onConvertSelectedRows()" id="convertSelectedButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Convert Selected</Button>
-        </div>
-        <div>
-            <Button onclick="onAddRow()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Add Row </Button>
-            <Button onclick="onDeleteRows()" id="deleteButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Delete </Button>
-        </div>
-        <head>
-            <title>Ag-Grid Basic Example</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1"/>
-            <style media="only screen">
-                html, body {
-                    height: 100%;
-                    width: 100%;
-                    margin: 0;
-                    box-sizing: border-box;
-                    -webkit-overflow-scrolling: touch;
-                }
-
-                html {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    padding: 0;
-                    overflow: auto;
-                }
-
-                body {
-                    padding: 1rem;
-                    overflow: auto;
-                }
-            </style>
-            <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
-            <script  src="{% static 'js/quantities.js' %}"></script>
-            <script type=module src="{% static 'js/main.js' %}"></script>
-            <script type="module">
-                import { onScaleQuantities } from "{% static 'js/main.js' %}";
-                window.onScaleQuantities = onScaleQuantities;
-            </script>
-            <script type="module">
-                import { onResetQuantities } from "{% static 'js/main.js' %}";
-                window.onResetQuantities = onResetQuantities;
-            </script>
-            <script type="module">
-                import { onAddRow } from "{% static 'js/main.js' %}";
-                window.onAddRow = onAddRow;
-            </script>
-            <script type="module">
-                import { onDeleteRows } from "{% static 'js/main.js' %}";
-                window.onDeleteRows = onDeleteRows;
-            </script>
-            <script type="module">
-                import { onConvert } from "{% static 'js/main.js' %}";
-                window.onConvert = onConvert;
-            </script>
-            <script type="module">
-                import { onConvertSelectedRows } from "{% static 'js/main.js' %}";
-                window.onConvertSelectedRows = onConvertSelectedRows;
-            </script>
-        </head>
-        <body>
-            <div id="myGrid" style="height: 100%;" class="ag-theme-alpine"></div>
-        </body>
-        <pre contenteditable id="directions">
-            {{ directions|linebreaks }}
-        </pre>
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
-      </div>
-
-      <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">© 2017-2018 Company Name</p>
-        <ul class="list-inline">
-          <li class="list-inline-item"><a href="#">Privacy</a></li>
-          <li class="list-inline-item"><a href="#">Terms</a></li>
-          <li class="list-inline-item"><a href="#">Support</a></li>
+        <ul class="nav nav-tabs justify-content-end" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="ingredients-tab" data-bs-toggle="tab" data-bs-target="#ingredients-content" type="button" role="tab" aria-controls="ingredients-content" aria-selected="true">Ingredients</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="directions-tab" data-bs-toggle="tab" data-bs-target="#directions-content" type="button" role="tab" aria-controls="directions-content" aria-selected="false">Directions</button>
+            </li>
         </ul>
-      </footer>
+        <div class="tab-content">
+            <div class="tab-pane active" id="ingredients-content" role="tabpanel" aria-labelledby="ingredients-tab" tabindex="0" style="padding: 2px 0px">
+                <div>
+                    <ul class="nav nav-tabs " id="controlsTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="scale-tab" data-bs-toggle="tab" data-bs-target="#scale-content" type="button" role="tab" aria-controls="scale-content" aria-selected="true">Scale</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="convert-tab" data-bs-toggle="tab" data-bs-target="#convert-content" type="button" role="tab" aria-controls="convert" aria-selected="false">Convert</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="edit-tab" data-bs-toggle="tab" data-bs-target="#edit-content" type="button" role="tab" aria-controls="edit" aria-selected="false">Edit</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="scale-content" role="tabpanel" aria-labelledby="scale-tab" tabindex="0" style="padding: 4px 0px">
+                            <div class="row row-cols-auto align-items-center g-1">
+                                <div class="col">
+                                    <select class="form-select-sm" aria-label="Ingredient select" name="ingredients" id="ingredients" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control-sm" name="scale" id="scale" size="3" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983; text-align: right"></input>
+                                </div>
+                                <div class="col">
+                                    <div class="row align-items-center">
+                                        <div class="col" name="scaleUnit" id="scaleUnit"></div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <Button class="btn btn-primary btn-sm" onclick="onScaleQuantities()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Scale </Button>
+                                </div>
+                                <div class="col">
+                                    <Button class="btn btn-primary btn-sm" onclick="onResetQuantities()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Reset </Button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="convert-content" role="tabpanel" aria-labelledby="convert-tab" tabindex="0" style="padding: 5px 0px">
+                            <div class="row row-cols-auto g-1">
+                                <div class="col">
+                                    <select class="form-select-sm" name="convertFrom" id="convertFrom" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
+                                </div>
+                                <div class="col">
+                                    <select class="form-select-sm" name="convertTo" id="convertTo" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
+                                </div>
+                                <div class="col">
+                                    <Button class="btn btn-primary btn-sm"  onclick="onConvert()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Convert All</Button>
+                                </div>
+                                <div class="col">
+                                    <Button class="btn btn-primary btn-sm"  onclick="onConvertSelectedRows()" id="convertSelectedButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Convert Selected</Button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="edit-content" role="tabpanel" aria-labelledby="edit-tab" tabindex="0" style="padding: 5px 0px">
+                            <div class="row row-cols-auto g-1">
+                                <div class="col">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="onAddRow()" data-bs-toggle="modal" data-bs-target="#addRowModal" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983">
+                                        Add Row
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    <Button class="btn btn-primary btn-sm" onclick="onDeleteRows()" id="deleteButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Delete </Button>
+                                </div>
+                                <div class="col">
+                                    <Button class="btn btn-primary btn-sm" onclick="onToggleHeading()" id="headingButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Heading On|Off </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                    <style media="only screen">
+                        html, body {
+                            height: 100%;
+                            width: 100%;
+                            margin: 0;
+                            box-sizing: border-box;
+                            -webkit-overflow-scrolling: touch;
+                        }
+
+                        html {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            padding: 0;
+                            overflow: auto;
+                        }
+
+                        body {
+                            padding: 1rem;
+                            overflow: auto;
+                        }
+                    </style>
+                    <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
+                    <script  src="{% static 'js/quantities.js' %}"></script>
+                    <script type=module src="{% static 'js/main.js' %}"></script>
+                    <script type="module">
+                        import { onScaleQuantities } from "{% static 'js/main.js' %}";
+                        window.onScaleQuantities = onScaleQuantities;
+                    </script>
+                    <script type="module">
+                        import { onResetQuantities } from "{% static 'js/main.js' %}";
+                        window.onResetQuantities = onResetQuantities;
+                    </script>
+                    <script type="module">
+                        import { onAddRow } from "{% static 'js/main.js' %}";
+                        window.onAddRow = onAddRow;
+                    </script>
+                    <script type="module">
+                        import { onAddExtraRow } from "{% static 'js/main.js' %}";
+                        window.onAddExtraRow = onAddExtraRow;
+                    </script>
+                    <script type="module">
+                        import { onDeleteRows } from "{% static 'js/main.js' %}";
+                        window.onDeleteRows = onDeleteRows;
+                    </script>
+                    <script type="module">
+                        import { onConvert } from "{% static 'js/main.js' %}";
+                        window.onConvert = onConvert;
+                    </script>
+                    <script type="module">
+                        import { onConvertSelectedRows } from "{% static 'js/main.js' %}";
+                        window.onConvertSelectedRows = onConvertSelectedRows;
+                    </script>
+                    <script type="module">
+                        import { onToggleHeading } from "{% static 'js/main.js' %}";
+                        window.onToggleHeading = onToggleHeading;
+                    </script>
+                </head>
+                <body>
+                    <div id="myGrid" style="height: 100%;" class="ag-theme-alpine"></div>
+                </body>
+            </div>
+            <div class="tab-pane" id="directions-content" role="tabpanel" aria-labelledby="directions-tab" tabindex="0" style="padding: 2px 0px">
+                <pre contenteditable id="directions">
+                    {{ directions|linebreaks }}
+                </pre>
+            </div>
+        </div>
+      </div>
     </div>
     <!-- Placed at the end of the document so the pages load faster -->
 {% endblock %}
