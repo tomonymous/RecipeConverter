@@ -4,3 +4,4 @@ text2digits>=0.1.0
 textblob>= 0.17.1
 beautifulsoup4 >= 4.11.1
 nltk >= 3.7
+whitenoise>=6.2
