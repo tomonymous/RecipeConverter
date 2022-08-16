@@ -22,14 +22,14 @@ const columnDefs = [
     field: "ingredient",
     checkboxSelection: true,
     rowDrag: true,
-    width:300,
+    width:180,
     valueFormatter:
         'if (value != null && value.trim().substring(0,1) == "#"){ value = value.trim().substring(1); value = value.toUpperCase(); return value;}'
   },
-  { field: "quantity", type: 'numericColumn', width: 90 },
+  { field: "quantity", type: 'numericColumn', width: 80 },
   { field: "unscaled", type: 'numericColumn', hide: true },
   { field: "scale", type: 'numericColumn', hide: true },
-  { field: "units", width:110 },
+  { field: "units", width:70 },
   { field: "details", flex: 1, minWidth: 90 }
 ];
 
