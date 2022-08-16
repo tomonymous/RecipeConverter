@@ -61,6 +61,7 @@ const gridOptions = {
     defaultColDef: {
         resizable: true,
         editable: true,
+        suppressMovable:true
     },
     rowDragManaged: true,
     animateRows: true,
@@ -121,6 +122,35 @@ export function onDeleteRows() {
     }
     api.applyTransaction({remove: selectedRows });
     onCellValueChanged('delete');
+}
+
+export function onSizeToFit() {
+    gridOptions.api.sizeColumnsToFit();
+}
+
+export function onAutoSize() {
+    var allColumnIds = [];
+    gridOptions.columnApi.getColumns().forEach((column) => {
+        allColumnIds.push(column.getId());
+    });
+    gridOptions.columnApi.autoSizeColumns(allColumnIds, true);
+}
+
+export function onSelectAllOrNone() {
+    let selectAll = true;
+    let firstRow = true
+    gridOptions.api.forEachNode((rowNode, index) => {
+        if(firstRow){
+            selectAll = rowNode.isSelected();
+            firstRow = false;
+        }
+        if(selectAll){
+            rowNode.setSelected(false);
+        }
+        else{
+            rowNode.setSelected(true);
+        }
+    })
 }
 
 export function onToggleHeading() {

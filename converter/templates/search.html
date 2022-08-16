@@ -73,6 +73,9 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="edit-tab" data-bs-toggle="tab" data-bs-target="#edit-content" type="button" role="tab" aria-controls="edit" aria-selected="false">Edit</button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="view-tab" data-bs-toggle="tab" data-bs-target="#view-content" type="button" role="tab" aria-controls="view" aria-selected="false">View</button>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="scale-content" role="tabpanel" aria-labelledby="scale-tab" tabindex="0" style="padding: 4px 0px">
@@ -124,6 +127,19 @@
                                 </div>
                                 <div class="col">
                                     <Button class="btn btn-primary btn-sm" onclick="onToggleHeading()" id="headingButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Heading On|Off </Button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="view-content" role="tabpanel" aria-labelledby="view-tab" tabindex="0" style="padding: 5px 0px">
+                            <div class="row row-cols-auto g-1">
+                                <div class="col">
+                                    <Button class="btn btn-primary btn-sm" onclick="onSizeToFit()" id="sizeToFitButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Size to Fit </Button>
+                                </div>
+                                <div class="col">
+                                    <Button class="btn btn-primary btn-sm" onclick="onAutoSize()" id="autoSizeButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Auto-Size </Button>
+                                </div>
+                                <div class="col">
+                                    <Button class="btn btn-primary btn-sm" onclick="onSelectAllOrNone()" id="selectAllOrNoneButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Select All | None </Button>
                                 </div>
                             </div>
                         </div>
@@ -187,6 +203,18 @@
                     <script type="module">
                         import { onToggleHeading } from "{% static 'js/main.js' %}";
                         window.onToggleHeading = onToggleHeading;
+                    </script>
+                    <script type="module">
+                        import { onSizeToFit } from "{% static 'js/main.js' %}";
+                        window.onSizeToFit = onSizeToFit;
+                    </script>
+                    <script type="module">
+                        import { onAutoSize } from "{% static 'js/main.js' %}";
+                        window.onAutoSize = onAutoSize;
+                    </script>
+                    <script type="module">
+                        import { onSelectAllOrNone } from "{% static 'js/main.js' %}";
+                        window.onSelectAllOrNone = onSelectAllOrNone;
                     </script>
                 </head>
                 <body>
