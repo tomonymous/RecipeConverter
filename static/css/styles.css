@@ -17,6 +17,6 @@
 }
 
 .ag-theme-alpine {
-  --ag-grid-size: 3px !important;
+  --ag-grid-size: 4px !important;
   --ag-header-height: 45px !important;
 }

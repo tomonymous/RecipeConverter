@@ -22,6 +22,7 @@ const columnDefs = [
     field: "ingredient",
     checkboxSelection: true,
     rowDrag: true,
+    suppressSizeToFit: true,
     width:180,
     valueFormatter:
         'if (value != null && value.trim().substring(0,1) == "#"){ value = value.trim().substring(1); value = value.toUpperCase(); return value;}'
