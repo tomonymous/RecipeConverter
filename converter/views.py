@@ -48,33 +48,44 @@ def search(request):
     if link is not None:
         query = ''
         directions = ''
-        req = urllib.request.Request(link, headers={'User-Agent': 'Mozilla/5.0'})
-        html = urllib.request.urlopen(req).read()
-        ingredient_list = findItems('ingredients', html)
-        directions_found = False
-        for text in ingredient_list:
-            line = re.sub('\s+', ' ', text).strip()
-            line = re.sub(' / ', '/', line)
-            if not directions_found:
-                if re.sub('[^a-zA-Z\s]', '', line).lower() in instruction_terms:
-                    directions_found = True
-                    directions += line + '\n'
-                elif 'ingredient' in text[:14].lower():
-                    if checkListForIngredients(query):
-                        query += line + '\n'
-                    else:
-                        query = ''
-                else:
-                    query += line + '\n'
-            else:
-                directions += line + '\n'
+        ingredient_list = []
+        if link[0:8].lower() != "https://":
+            link = 'https://' + link
+        try:
+            req = urllib.request.Request(link, headers={'User-Agent': 'Mozilla/5.0'})
+            html = urllib.request.urlopen(req).read()
+            ingredient_list = findItems('ingredients', html)
+        except Exception as e:
+            print("The error raised is: ", e)
 
-        if directions == '':
-            directions_list = findItems('directions', html)
-            if directions_list != None:
-                for text in directions_list:
-                    line = re.sub('\s+', ' ', text).strip()
+        directions_found = False
+        try:
+            for text in ingredient_list:
+                line = re.sub('\s+', ' ', text).strip()
+                line = re.sub(' / ', '/', line)
+                if not directions_found:
+                    if re.sub('[^a-zA-Z\s]', '', line).lower() in instruction_terms:
+                        directions_found = True
+                        directions += line + '\n'
+                    elif 'ingredient' in text[:14].lower():
+                        if checkListForIngredients(query):
+                            query += line + '\n'
+                        else:
+                            query = ''
+                    else:
+                        query += line + '\n'
+                else:
                     directions += line + '\n'
+
+            if directions == '':
+                directions_list = findItems('directions', html)
+                if directions_list != None:
+                    for text in directions_list:
+                        line = re.sub('\s+', ' ', text).strip()
+                        directions += line + '\n'
+        except:
+            query = "Sorry no recipe found."
+
 
     t2d = text2digits.Text2Digits()
     if directions != None:
