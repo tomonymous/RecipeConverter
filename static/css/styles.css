@@ -23,6 +23,7 @@
 
 body {
   background: url('/static/background.png') center center fixed;
+  background-repeat: repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
