@@ -105,3 +105,17 @@ a {
     overflow-wrap: break-word;
     white-space: normal;
 }
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    color: white;
+    pointer-events: auto;
+    background-color: #1f6199;
+    background-clip: padding-box;
+    border: 2px solid white;
+    border-radius: .3rem;
+    outline: 0;
+}
