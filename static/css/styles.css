@@ -110,7 +110,7 @@ a {
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: 100%;
     color: white;
     pointer-events: auto;
     background-color: #1f6199;
