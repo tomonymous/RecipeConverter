@@ -44,7 +44,7 @@
 
     <div class="container">
       <div class="py-2 text-center">
-        <h2>Recipe</h2>
+        <h2 style="color: #E7880D">Recipe</h2>
         <p class="fw-light">
             Double-click to edit or use the controls to scale the recipe or convert between units of measurement. <br>
             Switch to the 'Edit' tab to add or delete rows or toggle headings. <br>
@@ -60,7 +60,7 @@
                 <button class="nav-link" id="directions-tab" data-bs-toggle="tab" data-bs-target="#directions-content" type="button" role="tab" aria-controls="directions-content" aria-selected="false">Directions</button>
             </li>
         </ul>
-        <div class="tab-content">
+        <div class="tab-content"  style="background-color: #e5e4cf; ">
             <div class="tab-pane active" id="ingredients-content" role="tabpanel" aria-labelledby="ingredients-tab" tabindex="0" style="padding: 2px 0px">
                 <div>
                     <ul class="nav nav-tabs " id="controlsTab" role="tablist">
@@ -77,14 +77,14 @@
                             <button class="nav-link" id="view-tab" data-bs-toggle="tab" data-bs-target="#view-content" type="button" role="tab" aria-controls="view" aria-selected="false">View</button>
                         </li>
                     </ul>
-                    <div class="tab-content">
+                    <div class="tab-content" style="background-color: #F6F7EB;">
                         <div class="tab-pane active" id="scale-content" role="tabpanel" aria-labelledby="scale-tab" tabindex="0" style="padding: 4px 0px">
                             <div class="row row-cols-auto align-items-center g-1">
                                 <div class="col">
-                                    <select class="form-select-sm" aria-label="Ingredient select" name="ingredients" id="ingredients" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
+                                    <select class="form-select-sm" aria-label="Ingredient select" name="ingredients" id="ingredients" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"></select>
                                 </div>
                                 <div class="col">
-                                    <input class="form-control-sm" name="scale" id="scale" size="3" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983; text-align: right"></input>
+                                    <input class="form-control-sm" name="scale" id="scale" size="3" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5; text-align: right"></input>
                                 </div>
                                 <div class="col">
                                     <div class="row align-items-center">
@@ -92,54 +92,54 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <Button class="btn btn-primary btn-sm" onclick="onScaleQuantities()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Scale </Button>
+                                    <Button class="btn btn-primary btn-sm" onclick="onScaleQuantities()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"> Scale </Button>
                                 </div>
                                 <div class="col">
-                                    <Button class="btn btn-primary btn-sm" onclick="onResetQuantities()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Reset </Button>
+                                    <Button class="btn btn-primary btn-sm" onclick="onResetQuantities()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"> Reset </Button>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="convert-content" role="tabpanel" aria-labelledby="convert-tab" tabindex="0" style="padding: 5px 0px">
                             <div class="row row-cols-auto g-1">
                                 <div class="col">
-                                    <select class="form-select-sm" name="convertFrom" id="convertFrom" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
+                                    <select class="form-select-sm" name="convertFrom" id="convertFrom" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"></select>
                                 </div>
                                 <div class="col">
-                                    <select class="form-select-sm" name="convertTo" id="convertTo" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"></select>
+                                    <select class="form-select-sm" name="convertTo" id="convertTo" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"></select>
                                 </div>
                                 <div class="col">
-                                    <Button class="btn btn-primary btn-sm"  onclick="onConvert()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Convert All</Button>
+                                    <Button class="btn btn-primary btn-sm"  onclick="onConvert()" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"> Convert All</Button>
                                 </div>
                                 <div class="col">
-                                    <Button class="btn btn-primary btn-sm"  onclick="onConvertSelectedRows()" id="convertSelectedButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Convert Selected</Button>
+                                    <Button class="btn btn-primary btn-sm"  onclick="onConvertSelectedRows()" id="convertSelectedButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #3F88C5; background-color: #3F88C5"> Convert Selected</Button>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="edit-content" role="tabpanel" aria-labelledby="edit-tab" tabindex="0" style="padding: 5px 0px">
                             <div class="row row-cols-auto g-1">
                                 <div class="col">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="onAddRow()" data-bs-toggle="modal" data-bs-target="#addRowModal" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="onAddRow()" data-bs-toggle="modal" data-bs-target="#addRowModal" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5">
                                         Add Row
                                     </button>
                                 </div>
                                 <div class="col">
-                                    <Button class="btn btn-primary btn-sm" onclick="onDeleteRows()" id="deleteButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Delete </Button>
+                                    <Button class="btn btn-primary btn-sm" onclick="onDeleteRows()" id="deleteButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"> Delete </Button>
                                 </div>
                                 <div class="col">
-                                    <Button class="btn btn-primary btn-sm" onclick="onToggleHeading()" id="headingButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Heading On|Off </Button>
+                                    <Button class="btn btn-primary btn-sm" onclick="onToggleHeading()" id="headingButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"> Heading On|Off </Button>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="view-content" role="tabpanel" aria-labelledby="view-tab" tabindex="0" style="padding: 5px 0px">
                             <div class="row row-cols-auto g-1">
                                 <div class="col">
-                                    <Button class="btn btn-primary btn-sm" onclick="onSizeToFit()" id="sizeToFitButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Size to Fit </Button>
+                                    <Button class="btn btn-primary btn-sm" onclick="onSizeToFit()" id="sizeToFitButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"> Size to Fit </Button>
                                 </div>
                                 <div class="col">
-                                    <Button class="btn btn-primary btn-sm" onclick="onAutoSize()" id="autoSizeButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Auto-Size </Button>
+                                    <Button class="btn btn-primary btn-sm" onclick="onAutoSize()" id="autoSizeButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"> Auto-Size </Button>
                                 </div>
                                 <div class="col">
-                                    <Button class="btn btn-primary btn-sm" onclick="onSelectAllOrNone()" id="selectAllOrNoneButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #64a983"> Select All | None </Button>
+                                    <Button class="btn btn-primary btn-sm" onclick="onSelectAllOrNone()" id="selectAllOrNoneButton" style="border-style: solid; border-radius: 4px; color:white; border-color: #175d36; background-color: #3F88C5"> Select All | None </Button>
                                 </div>
                             </div>
                         </div>

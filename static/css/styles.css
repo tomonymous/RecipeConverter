@@ -1,5 +1,5 @@
 .subheadings {
-  background-color: #9fcdd9 !important;
+  background-color: #e7b26e !important;
 }
 
 #directions {
@@ -9,7 +9,7 @@
 }
 
 .nav-link {
-    color:#006e47;
+    color:#404040;
 }
 
 .nav-link:focus, .nav-link:hover {
@@ -19,4 +19,87 @@
 .ag-theme-alpine {
   --ag-grid-size: 4px !important;
   --ag-header-height: 45px !important;
+}
+
+body {
+  background: url('/static/background.png') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+body {
+    margin: 0;
+    font-family: var(--bs-body-font-family);
+    font-size: var(--bs-body-font-size);
+    font-weight: var(--bs-body-font-weight);
+    line-height: var(--bs-body-line-height);
+    color: #E4F0D0;
+    text-align: var(--bs-body-text-align);
+    background-color: var(--bs-body-bg);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-outline {
+    color: #e7880d;
+    border-color: #e7880d;
+    border: 2px solid #e7880d;
+    font-weight: 500;
+}
+
+.btn:hover, .btn:focus, .btn:active, .btn.active, .open>.dropdown-toggle.btn {
+    color: #fff;
+    background-color: #e7880d;
+    border-color: #e7880d; /*set the color you want here*/
+}
+
+input + label {
+  color: black;
+}
+
+label {
+    display: inline-block;
+    color: black;
+}
+
+.text-muted {
+    --bs-text-opacity: 1;
+    color: #E4F0D0!important;
+}
+
+a {
+    color: #6c9cc4;
+    text-decoration: underline;
+}
+
+.ag-header-cell-resize {
+    position: absolute;
+    z-index: 2;
+    height: 100%;
+    width: 12px!important;
+    top: 0;
+    cursor: ew-resize;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+    color: black;
+    background-color: #F6F7EB;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+.nav-tabs .nav-link {
+    margin-bottom: -1px;
+    background: #cccbb8;
+    border: 1px solid transparent;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+#directions {
+    word-wrap: break-word;
+    color: black;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
