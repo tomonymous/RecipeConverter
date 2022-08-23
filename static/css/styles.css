@@ -119,3 +119,6 @@ a {
     border-radius: .3rem;
     outline: 0;
 }
+.bg-light {
+	background-color: #E4F0D0!important;
+}

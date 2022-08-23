@@ -41,7 +41,7 @@ def search(request):
     #url = 'https://www.joshuaweissman.com/post/easy-authentic-thai-green-curry'
     #url = 'https://www.bbc.co.uk/food/recipes/cumberland_sausage_59571'
     #url = 'https://food52.com/recipes/61557-classic-nigerian-jollof-rice'
-
+    title = 'Recipe'
     link = request.GET.get('link')
     query = request.GET.get('query')
     directions = request.GET.get('directions')
@@ -55,6 +55,8 @@ def search(request):
             req = urllib.request.Request(link, headers={'User-Agent': 'Mozilla/5.0'})
             html = urllib.request.urlopen(req).read()
             ingredient_list = findItems('ingredients', html)
+            soup = BeautifulSoup(html, 'html.parser')
+            title = soup.find('title').string
         except Exception as e:
             print("The error raised is: ", e)
 
@@ -316,7 +318,8 @@ def search(request):
     json_units = json.dumps(ingredient_units)
     json_values = json.dumps(ingredient_values)
     json_descriptions = json.dumps(ingredient_descriptions)
-    return render(request, 'search.html', {'ingredients': ingredients, 'searchString': query, 'directions': directions, 'empty': is_empty,
+    return render(request, 'search.html', {'ingredients': ingredients, 'searchString': query, 'directions': directions,
+                                           'empty': is_empty, 'title': title,
                                            'ingredient_names': json_ingredients, 'ingredient_units': json_units,
                                            'ingredient_values': json_values,
                                            'ingredient_descriptions': json_descriptions})

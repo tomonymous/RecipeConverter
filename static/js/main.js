@@ -50,7 +50,7 @@ for (let i = 0; i < names.length; i++){
         }
     }
 
-    let entry = { ingredient: unicodeToChar(names[i]), quantity: values[i], unscaled: values[i], scale: 1, units: units[i], details: descriptions[i]};
+    let entry = { ingredient: unicodeToChar(names[i]), quantity: values[i], unscaled: values[i], scale: 1, units: units[i], details: unicodeToChar(descriptions[i])};
     rowData.push(entry);
 }
 
@@ -383,11 +383,9 @@ export function onConvertSelectedRows() {
         }
     }
 }
-let count = 0;
+
 function onCellValueChanged(event) {
     if(event == 'delete' || event.column.colId == 'ingredient' || event.column.colId == 'units' || event.column.colId == 'quantity'){
-        //console.log(count);
-        //count++;
         while(scale_ingredient.length > 0){
             scale_ingredient.remove(scale_ingredient[0]);
         }
