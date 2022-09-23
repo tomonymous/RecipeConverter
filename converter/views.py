@@ -19,7 +19,7 @@ measures = ['litre', 'l', 'millilitre', 'ml', 'gram', 'g', 'gm', 'kilogram', 'kg
             'pt', 'quart', 'qt', 'gallon', 'gal', 'cm', 'can', 'tin', 'handful', 'rasher',
             'litres', 'ls', 'milliliters', 'mls', 'grams', 'gs', 'gms', 'kilograms', 'kgs', 'teaspoons', 'tsps',
             'dessertspoons', 'dstspns', 'dspns', 'dsps', 'dssps', 'tablespoons', 'tbpns', 'tbsps', 'ounces', 'ozs',
-            'pounds',
+            'pounds', 'unit', 'units',
             'lbs', 'cups', 'cs', 'pints', 'pts', 'quarts', 'qts', 'gallons', 'gals', 'cms',
             'cans', 'tins', 'handfuls', 'rashers', 'milliliter', 'milliliters', 'floz', 'inch', 'inches', 'dram',
             'drams',
@@ -54,7 +54,10 @@ def search(request):
         try:
             req = urllib.request.Request(link, headers={'User-Agent': 'Mozilla/5.0'})
             html = urllib.request.urlopen(req).read()
-            ingredient_list = findItems('ingredients', html)
+            ingredients = findItems('ingredients', html)
+            ingredient_list = ingredients[0]
+            key = ingredients[1]                                        #findItems now provides BeautifulSoup key where ingredients were found. Want to use this to refine.
+            print(key)
             soup = BeautifulSoup(html, 'html.parser')
             title = soup.find('title').string
         except Exception as e:
@@ -80,7 +83,7 @@ def search(request):
                     directions += line + '\n'
 
             if directions == '':
-                directions_list = findItems('directions', html)
+                directions_list = findItems('directions', html)[0]
                 if directions_list != None:
                     for text in directions_list:
                         line = re.sub('\s+', ' ', text).strip()
@@ -140,13 +143,24 @@ def search(request):
     query = re.sub('fluid ounce|fl oz|oz fl', r"floz", query)
     ingredient_descriptions = query.splitlines()
     accidental_split_correction = ''
+    hello_fresh_brackets = ''
     for text in ingredient_descriptions:
         ingredient = Ingredient()
         text = text.strip()
+        if hello_fresh_brackets != '':
+            hello_fresh_brackets = hello_fresh_brackets + ' ' + text
+            if ')' in hello_fresh_brackets:
+                ingredients[-1].description += ' ' + hello_fresh_brackets
+                hello_fresh_brackets = ''
+            continue
+        if text == '(':
+            hello_fresh_brackets = text
+            continue
         if accidental_split_correction != '':
             text = accidental_split_correction + ' ' + text
             accidental_split_correction = ''
-        if len(text) < 6:                               #corrects for formatting where quantities on different line
+        if len(text.split()) == 2 and (text.split()[0].isdigit()                                                    #corrects for formatting where quantities on different line
+                                       or unicodedata.name(text.split()[0][0]).split()[0] == 'VULGAR') or len(text) < 6:             #if two words and first word is digit or fraction.
             accidental_split_correction = text
             continue
         description = ''
@@ -174,7 +188,6 @@ def search(request):
                     text = text[text.index(" of ")+4:] + " " + text[:text.index(" of ")]
                 except:
                     pass
-
         blob = TextBlob(text.strip())
         blob.tags
         name_found = False
@@ -437,7 +450,7 @@ def findIngredientList(type, count, html):
             break
         else:
             scope = len(key.contents)
-    return (scope, item_list)
+    return (scope, item_list, key)
 
 def findItems(type, html):
 
@@ -458,12 +471,14 @@ def findItems(type, html):
 
     smallest_scope = None
     count = 0
+    key = None
     for option in list_options:
         count += 1
         if smallest_scope == None or smallest_scope > option[0]:
             smallest_scope = option[0]
             list = option[1]
-    return list
+            key = option[2]
+    return (list, key)
 
 def checkListForIngredients(item_string_list):
     number_count = 0

@@ -23,14 +23,15 @@ IS_HEROKU = "DYNO" in os.environ
 SECRET_KEY = 'django-insecure-$jiqwl#c_785iy&#rw%p3a2(n#fnw=afvhrhrjls#zx+jgw3!$'
 
 # Generally avoid wildcards(*). However since Heroku router provides hostname validation it is ok
-if IS_HEROKU:
-    ALLOWED_HOSTS = ["*"]
-else:
-    ALLOWED_HOSTS = []
+#if IS_HEROKU:
+#    ALLOWED_HOSTS = ["*"]
+#else:
+#    ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['recipefrog.applikuapp.com']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if not IS_HEROKU:
-    DEBUG = True
+#if not IS_HEROKU:
+#    DEBUG = True
 
 
 
