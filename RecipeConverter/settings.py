@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os.path
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,7 @@ IS_HEROKU = "DYNO" in os.environ
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$jiqwl#c_785iy&#rw%p3a2(n#fnw=afvhrhrjls#zx+jgw3!$'
+SECRET_KEY = config('SECRET_KEY')
 
 # Generally avoid wildcards(*). However since Heroku router provides hostname validation it is ok
 #if IS_HEROKU:

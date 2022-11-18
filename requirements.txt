@@ -5,3 +5,4 @@ textblob>= 0.17.1
 beautifulsoup4 >= 4.11.1
 nltk >= 3.7
 whitenoise>=6.2
+python_decouple >= 3.6
